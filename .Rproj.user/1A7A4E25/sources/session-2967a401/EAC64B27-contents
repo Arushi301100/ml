@@ -108,7 +108,60 @@ head(df17b)
 
 # Line Chart 2
 df17b %>% filter(country %in% c('United States of America', 'Singapore', 'United Kingdom', 'China', 'Canada', 'India', 'Japan', 'Australia')) %>% ggplot(., aes(x=country, y=acad_rank, group=rank))
+summary(df17b)
+str(df17b)
 
 
+# March 28, 2025
+#Topmost University in QS ranking 2025 from 10 different Countries----
+
+#df17b %>% group_by(country) %>% arrange(country, rank_25) %>% select(country, rank_25) %>% slice_min(order_by = rank_25, n=1) %>% as.data.frame() %>% filter(rank_25 <10)
+
+#df17b %>% arrange(country, rank_25) %>% select(country, rank_25)
+
+result <- df17b %>% arrange(country, rank_25) %>% group_by(country) %>% slice_min(order_by = rank_25, n=1) 
+result2 <- result %>% ungroup() %>% arrange(rank_25)
+#result_sorted <- result[order(result$rank_25), ]
+view (result2) 
+Top10 <- result2 %>% slice_head(n=10)
+India <- result2 %>% filter(country %in% c('India'))
+
+Top10b <- rbind(Top10, India)
 
 
+#df17b wide to long data----
+df17_long <- pivot_longer(df17b, cols = c('acad_score', 'emp_score', 'cit_score', 'hi_score','irn_score'), names_to = 'category')
+view(df17_long)
+
+
+#Top10 Wide data to Long Data----
+top_long <- Top10b %>% select(-c('rank_24', 'score', 'acad_rank', 'emp_rank', 'cit_rank', 'hi_rank', 'irn_rank')) %>% pivot_longer(cols = c('acad_score', 'emp_score', 'cit_score', 'hi_score','irn_score'), names_to = 'category')
+
+
+head(top_long)
+
+
+?pivot_longer
+
+#Stacked Bar Graph ----
+top_long %>% ggplot(., aes(fill=category, x=country, y=value)) + geom_bar(position="stack", stat="identity", color="black") + labs(title = "Tope 1 Institution of each Country and Indicators Score") + geom_text(aes(label = value), position = position_stack(0.5))
+
+library(tidytext)
+
+top_long %>% ggplot(., aes(fill=category, x= tidytext::reorder_within(country, value, category), y=value)) + geom_bar(position="stack", stat="identity", color="black") + labs(title = "Tope 1 Institution of each Country and Indicators Score") + geom_text(aes(label = value), position = position_stack(0.5)) + facet_wrap(category~., scales='free') + scale_x_reordered()+ coord_flip()
+
+view(data2)
+
+#Summarizing the average of indicators of universities from different countries.
+data1 <- df17_long %>% arrange(country, rank_25) %>% group_by(country, category) %>% summarise(avg = mean(value), n= n_distinct(institution))
+
+#(unique(data1$country))
+c10 <- data1 %>% ungroup() %>% distinct(country, n) %>% arrange(desc(n)) %>% slice_head(n=10) %>% pull(country)
+
+c10
+data2 <- data1 %>% filter(country %in% c10)
+data2
+gQS_stack <- data2 %>% ggplot(., aes(x=reorder_within(country, avg, category), y=avg, fill = country)) + geom_bar(stat = 'identity') + facet_wrap(category ~., scales='free') + guides(fill = 'none') + geom_text(aes(label=paste0("N=", n, ', ', round(avg))), vjust=0.5, hjust = 2.5)+ scale_x_reordered() + coord_flip() + labs( title = "Average Indicator Scores of Top 10 Countries", x = "Country", y="Average Scores") + theme(plot.title = element_text(hjust=0.5), strip.background = element_rect(fill = "yellow", linewidth = 2, color="red"))
+
+
+gQS_stack
