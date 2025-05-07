@@ -1,27 +1,27 @@
 {
-    "id": "6984CDFA",
-    "path": "E:/analytics/projects/ml/basics/regression.R",
-    "project_path": "basics/regression.R",
+    "id": "8C7BD665",
+    "path": "E:/analytics/projects/ml/basics/decesion_tree.R",
+    "project_path": "basics/decesion_tree.R",
     "type": "r_source",
-    "hash": "3635046663",
+    "hash": "2302312076",
     "contents": "",
     "dirty": false,
-    "created": 1742973666146.0,
+    "created": 1745168158486.0,
     "source_on_save": false,
-    "relative_order": 2,
+    "relative_order": 3,
     "properties": {
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "6,35",
-        "scrollLine": "0"
+        "cursorPosition": "210,0",
+        "scrollLine": "201"
     },
     "folds": "",
-    "lastKnownWriteTime": 1742990293,
+    "lastKnownWriteTime": 1745497699,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1742990293068,
+    "last_content_update": 1745497699458,
     "read_only": false,
     "read_only_alternatives": []
 }
