@@ -30,6 +30,10 @@ predict_stock <- function() {
     data_xts <- get(ticker)
     close_prices <- Cl(data_xts)
     
+    # Convert to tibble with date
+    df <- tibble(date = index(close_prices), close = as.numeric(close_prices))
+    
+    
     # Convert to ts object for forecasting (assume daily frequency)
     ts_data <- ts(as.numeric(close_prices), frequency = 252) # approx trading days
     
@@ -37,11 +41,15 @@ predict_stock <- function() {
     fit <- auto.arima(ts_data)
     forecast_value <- forecast(fit, h=30)
     
+    # Add forecasted values to tibble
+    forecast_dates <- seq(from = max(df$date) + 1, by = 'day', length.out = 10)
+    forecast_df <- tibble(date = forecast_dates, close = as.numeric(forecasted$mean))
+    
     # Plot actual + forecast
     plot(forecast_value, main = paste("Forecast for ", ticker))
     
     # Print forecast table
-    print(forecast_value)
+    print(forecast_df)
   }, error = function(e){
     cat("Error fetchingthe data, check ticker or dates. \n")
     cat("Details: ", e$message, "\n")
