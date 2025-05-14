@@ -41,3 +41,51 @@ inspect(milk_rule[1:10])
 milk_rule = sort(milk_rule, by="confidence", decreasing = T)
 inspect(milk_rule[1:5])
 plot(milk_rule[1:10], method='graph')
+
+
+
+#____________________________________________________________
+library(arules)
+library(arulesViz)
+
+file2 = "E:/analytics/data/subjectARdata.csv"
+subjects = read.transactions(file = file2, format='basket', sep=',', skip=1, rm.duplicates = T)
+
+subjects
+summary(subjects)
+inspect(subjects[1:5])
+
+# Item Frequency Plot:______________________
+itemFrequencyPlot(subjects, type = 'absolute', topN=15, xlab='subject_name')
+
+
+# Apriori Algorithm:___________________________
+rules2 = apriori(subjects, parameter = list(support = 0.006, confidence = 0.3))
+summary(rules2)
+inspect(rules2) # 23 rules
+
+# Sort most frequent rules based on Confidence:_______________
+conf_rule = sort(rules2, by = 'confidence', decreasing = T)
+inspect(conf_rule[1:5])
+
+support_rule = sort(rules2, by = 'support', decreasing = T)
+inspect(support_rule[1:5])
+
+lift_rule = sort(rules2, by='lift', decreasing = T)
+inspect(lift_rule[1:5])
+
+plot(conf_rule)
+plot(support_rule)
+plot(lift_rule)
+
+# Subject Wise Rules:___________________________
+
+
+
+
+
+
+
+
+
+
